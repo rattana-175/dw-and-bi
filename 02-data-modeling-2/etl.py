@@ -13,6 +13,11 @@ table_create = """
     (
         id text,
         type text,
+        actor_id text,
+        actor_login text,
+        repo_id text,
+        repo_name text,
+        created_at timestamp,
         public boolean,
         PRIMARY KEY (
             id,
@@ -20,6 +25,21 @@ table_create = """
         )
     )
 """
+
+# table_create = """
+#     CREATE TABLE IF NOT EXISTS repo
+#     (
+#         id text,
+#         type text,
+#         public boolean,
+#         PRIMARY KEY (
+#             id,
+#             type
+#         )
+#     )
+# """
+
+
 
 create_table_queries = [
     table_create,
@@ -73,7 +93,22 @@ def process(session, filepath):
                 print(each["id"], each["type"], each["actor"]["login"])
 
                 # Insert data into tables here
-
+                query = f"""
+                    INSERT INTO events (
+                        id,
+                        type,
+                        actor_id,
+                        actor_login,
+                        repo_id,
+                        repo_name,
+                        created_at,
+                        public) 
+                    VALUES ('{each["id"]}', '{each["type"]}', 
+                            '{each["actor"]["id"]}','{each["actor"]["login"]}',
+                            '{each["repo"]["id"]}', '{each["repo"]["name"]}', 
+                            '{each["created_at"]}',{each["public"]})
+                """
+                session.execute(query)
 
 def insert_sample_data(session):
     query = f"""
@@ -106,8 +141,8 @@ def main():
     drop_tables(session)
     create_tables(session)
 
-    # process(session, filepath="../data")
-    insert_sample_data(session)
+    process(session, filepath="../data")
+    # insert_sample_data(session)
 
     # Select data in Cassandra and print them to stdout
     query = """
