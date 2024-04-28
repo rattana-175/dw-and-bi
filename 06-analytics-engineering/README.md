@@ -52,17 +52,3 @@ To create models
 
 ```sh
 dbt run
-```
-
-To test models
-
-```sh
-dbt test
-```
-
-To view docs (on Gitpod)
-
-```sh
-dbt docs generate
-dbt docs serve
-```
