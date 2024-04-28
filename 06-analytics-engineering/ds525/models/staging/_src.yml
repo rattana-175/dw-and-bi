@@ -2,7 +2,8 @@ version: 2
 
 sources:
   - name: jaffle_shop
-    databse: public
+    database: postgres
+    schema : public
     tables:
       - name: jaffle_shop_customers
       - name: jaffle_shop_orders
